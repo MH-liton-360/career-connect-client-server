@@ -16,7 +16,7 @@ const Navbar = () => {
                     <div className="dropdown dropdown-end">
                         <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                             <div className=" rounded-full">
-                                <FaUser></FaUser>
+                                <button><FaUser></FaUser></button>
                             </div>
                         </div>
                         <ul

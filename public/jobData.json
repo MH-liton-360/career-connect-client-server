@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "title": "Frontend Developer",
+        "company": "TechNova Solutions",
+        "shortDescription": "Build responsive web interfaces using React and Tailwind CSS. Collaborate with UI/UX team to deliver modern designs.",
+        "buttonText": "View"
+    },
+    {
+        "id": 2,
+        "title": "Backend Engineer",
+        "company": "CodeMatrix Labs",
+        "shortDescription": "Develop RESTful APIs using Node.js and Express. Optimize MongoDB queries for performance and scalability.",
+        "buttonText": "View"
+    },
+    {
+        "id": 3,
+        "title": "UI/UX Designer",
+        "company": "PixelWorks Studio",
+        "shortDescription": "Design intuitive interfaces and ensure consistent user experiences across platforms using Figma and Adobe XD.",
+        "buttonText": "View"
+    }
+]
