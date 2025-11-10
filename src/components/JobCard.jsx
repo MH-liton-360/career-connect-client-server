@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const JobCard = () => {
     const [jobs, setJobs] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetch('/jobData.json')
@@ -9,6 +11,9 @@ const JobCard = () => {
             .then((data) => setJobs(data));
     }, []);
 
+    const handleViewDetails = (id) => {
+        navigate(`/details/${id}`);
+    };
 
     return (
         <div className="">
@@ -20,7 +25,12 @@ const JobCard = () => {
                         <h2 className="card-title">{job.company} </h2>
                         <p>{job.shortDescription}</p>
                         <div className="card-actions justify-end">
-                            <button className="btn btn-primary">{job.buttonText}</button>
+                            <button
+                                className="btn btn-primary"
+                                onClick={() => handleViewDetails(job.id)}
+                            >
+                                {job.buttonText || "View Details"}
+                            </button>
                         </div>
                     </div>
                 </div>

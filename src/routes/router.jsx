@@ -1,18 +1,40 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
+import JobCardDetails from "../components/JobCardDetails";
+import JobCard from "../components/JobCard";
+import AuthLayout from "../layouts/AuthLayout";
+import LoginPage from "../pages/LoginPage";
+import RegisterPage from "../pages/RegisterPage";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <MainLayout></MainLayout>
+        element: <MainLayout></MainLayout>,
+        children: [
+            {
+                path: "jobcard",
+                element: <JobCard></JobCard>
+            },
+            {
+                path: "/details/:id",
+                element: <JobCardDetails></JobCardDetails>
+            },
+        ]
     },
-    {
-        path: "/details",
-        element: <h1>Details page</h1>
-    },
+
     {
         path: "auth",
-        element: <h1>Login page</h1>
+        element: <AuthLayout></AuthLayout>,
+        children: [
+            {
+                path: "login",
+                element: <LoginPage></LoginPage>
+            },
+            {
+                path: "register",
+                element: <RegisterPage></RegisterPage>
+            },
+        ]
     },
     {
         path: "*",
