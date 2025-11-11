@@ -1,15 +1,13 @@
 // src/context/AuthContext.jsx
-
 import React, { createContext, useContext, useEffect, useState } from "react";
 import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     signOut,
     onAuthStateChanged,
-    updateProfile
+    updateProfile,
 } from "firebase/auth";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { auth, storage } from "../firebase/firebase.config.js";
+import { auth } from "../firebase/firebase.config.js";
 
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
@@ -18,28 +16,34 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const register = async ({ email, password, displayName, file }) => {
+    // ✅ Register with photoURL (no file upload)
+    const register = async ({ email, password, displayName, photoURL }) => {
         const cred = await createUserWithEmailAndPassword(auth, email, password);
-        let photoURL = null;
 
-        if (file) {
-            const storageRef = ref(storage, `users/${cred.user.uid}/${file.name}`);
-            await uploadBytes(storageRef, file);
-            photoURL = await getDownloadURL(storageRef);
-        }
-
+        // Update Firebase profile
         await updateProfile(cred.user, {
             displayName: displayName || "",
-            photoURL: photoURL || ""
+            photoURL: photoURL || "",
         });
 
-        setUser({ ...cred.user });
+        // Update local state
+        setUser({
+            ...cred.user,
+            displayName: displayName || "",
+            photoURL: photoURL || "",
+        });
+
         return cred.user;
     };
 
-    const login = (email, password) => signInWithEmailAndPassword(auth, email, password);
+    // ✅ Login function
+    const login = (email, password) =>
+        signInWithEmailAndPassword(auth, email, password);
+
+    // ✅ Logout function
     const logout = () => signOut(auth);
 
+    // ✅ Keep user logged in on reload
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
@@ -49,5 +53,10 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const value = { user, loading, register, login, logout };
-    return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;
+
+    return (
+        <AuthContext.Provider value={value}>
+            {!loading && children}
+        </AuthContext.Provider>
+    );
 };

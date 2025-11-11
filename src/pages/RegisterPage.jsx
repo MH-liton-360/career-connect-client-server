@@ -1,3 +1,4 @@
+// src/pages/RegisterPage.jsx
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -6,7 +7,7 @@ const RegisterPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [userName, setUserName] = useState("");
-    const [file, setFile] = useState(null);
+    const [photoURL, setPhotoURL] = useState(""); // Profile photo URL
     const { register } = useAuth();
     const navigate = useNavigate();
     const [error, setError] = useState("");
@@ -14,10 +15,13 @@ const RegisterPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await register({ email, password, displayName: userName, file });
-            navigate("/");
+            // Pass photoURL instead of file
+            await register({ email, password, displayName: userName, file: null, photoURL });
+            // Redirect to login page after successful registration
+            navigate("/auth/login");
         } catch (err) {
-            setError("Registration failed. Please try again.");
+            console.error("Firebase registration error:", err);
+            setError(err.message || "Registration failed. Please try again.");
         }
     };
 
@@ -38,6 +42,7 @@ const RegisterPage = () => {
                     className="input input-bordered w-full rounded-lg focus:border-blue-500 focus:ring focus:ring-blue-200"
                     value={userName}
                     onChange={(e) => setUserName(e.target.value)}
+                    required
                 />
                 <input
                     type="email"
@@ -56,16 +61,14 @@ const RegisterPage = () => {
                     required
                 />
 
-                {/* Custom file upload */}
-                <label className="btn btn-outline w-full mb-2 cursor-pointer flex justify-center items-center rounded-lg">
-                    {file ? file.name : "Choose Profile Image"}
-                    <input
-                        type="file"
-                        className="hidden"
-                        accept="image/*"
-                        onChange={(e) => setFile(e.target.files[0])}
-                    />
-                </label>
+                {/* Profile photo URL input */}
+                <input
+                    type="text"
+                    placeholder="Profile Photo URL (Optional)"
+                    className="input input-bordered w-full rounded-lg focus:border-blue-500 focus:ring focus:ring-blue-200"
+                    value={photoURL}
+                    onChange={(e) => setPhotoURL(e.target.value)}
+                />
 
                 <button className="btn btn-primary w-full rounded-lg py-2 mt-2 text-white font-semibold text-lg shadow-lg hover:shadow-xl transition-shadow">
                     Register
