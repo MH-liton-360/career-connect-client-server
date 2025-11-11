@@ -11,6 +11,10 @@ const router = createBrowserRouter([
         path: "/",
         element: <MainLayout></MainLayout>,
         children: [
+            // {
+            //     path: "landingPage",
+            //     element: <LandingPage></LandingPage>
+            // },
             {
                 path: "jobcard",
                 element: <JobCard></JobCard>
