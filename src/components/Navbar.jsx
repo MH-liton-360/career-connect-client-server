@@ -10,7 +10,7 @@ const Navbar = () => {
     const handleLogout = async () => {
         try {
             await logout();
-            navigate("/");
+            navigate("/auth/login");
         } catch (err) {
             console.error(err);
         }
@@ -18,17 +18,25 @@ const Navbar = () => {
 
     // Helper: get initial letter
     const getInitial = () => {
-        if (user.displayName) return user.displayName.charAt(0).toUpperCase();
-        if (user.email) return user.email.charAt(0).toUpperCase();
+        if (user?.displayName) return user.displayName.charAt(0).toUpperCase();
+        if (user?.email) return user.email.charAt(0).toUpperCase();
         return "?";
     };
 
     return (
         <div className="navbar bg-base-100 shadow-sm px-4">
+            {/* Logo */}
             <div className="flex-1">
-                <img src={logo} alt="CareerConnect Logo" className="w-40 h-32 rounded-4xl" />
+                <Link to="/">
+                    <img
+                        src={logo}
+                        alt="CareerConnect Logo"
+                        className="w-40 h-32 rounded-4xl"
+                    />
+                </Link>
             </div>
 
+            {/* Search + User/Profile */}
             <div className="flex gap-3 items-center">
                 <input
                     type="text"
@@ -54,9 +62,25 @@ const Navbar = () => {
                             tabIndex={0}
                             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow"
                         >
-                            <li>{user.displayName || user.email}</li>
+                            <li className="font-semibold">{user.displayName || user.email}</li>
+
+                            {/* Role-based links */}
+                            {user.role === "admin" && (
+                                <li>
+                                    <Link to="/dashboard">Dashboard</Link>
+                                </li>
+                            )}
                             <li>
-                                <button onClick={handleLogout}>Logout</button>
+                                <Link to="/profile">Profile</Link>
+                            </li>
+
+                            <li>
+                                <button
+                                    className="text-red-500"
+                                    onClick={handleLogout}
+                                >
+                                    Logout
+                                </button>
                             </li>
                         </ul>
                     </div>

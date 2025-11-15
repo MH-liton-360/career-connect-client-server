@@ -16,46 +16,67 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // ✅ Register with photoURL (no file upload)
+
     const register = async ({ email, password, displayName, photoURL }) => {
         const cred = await createUserWithEmailAndPassword(auth, email, password);
 
-        // Update Firebase profile
         await updateProfile(cred.user, {
             displayName: displayName || "",
             photoURL: photoURL || "",
         });
 
-        // Update local state
         setUser({
-            ...cred.user,
+            uid: cred.user.uid,
+            email: cred.user.email,
             displayName: displayName || "",
             photoURL: photoURL || "",
+            role: "user", // default role
         });
 
         return cred.user;
     };
 
-    // ✅ Login function
-    const login = (email, password) =>
-        signInWithEmailAndPassword(auth, email, password);
 
-    // ✅ Logout function
-    const logout = () => signOut(auth);
+    const login = async (email, password) => {
+        const cred = await signInWithEmailAndPassword(auth, email, password);
 
-    // ✅ Keep user logged in on reload
+        setUser({
+            uid: cred.user.uid,
+            email: cred.user.email,
+            displayName: cred.user.displayName || "",
+            photoURL: cred.user.photoURL || "",
+            role: "user", // later fetch from backend for admin
+        });
+
+        return cred.user;
+    };
+
+
+    const logout = async () => {
+        await signOut(auth);
+        setUser(null);
+    };
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
+            if (currentUser) {
+                setUser({
+                    uid: currentUser.uid,
+                    email: currentUser.email,
+                    displayName: currentUser.displayName || "",
+                    photoURL: currentUser.photoURL || "",
+                    role: "user", // default, or fetch from backend
+                });
+            } else {
+                setUser(null);
+            }
             setLoading(false);
         });
         return unsubscribe;
     }, []);
 
-    const value = { user, loading, register, login, logout };
-
     return (
-        <AuthContext.Provider value={value}>
+        <AuthContext.Provider value={{ user, loading, register, login, logout }}>
             {!loading && children}
         </AuthContext.Provider>
     );

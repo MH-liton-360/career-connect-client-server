@@ -5,16 +5,19 @@ import JobCard from "../components/JobCard";
 import AuthLayout from "../layouts/AuthLayout";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
+import UserProfile from "../pages/UserProfile";
+import AdminDashboard from "../pages/AdminDashboard";
+import LandingPage from "../pages/LandingPage";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <MainLayout></MainLayout>,
         children: [
-            // {
-            //     path: "landingPage",
-            //     element: <LandingPage></LandingPage>
-            // },
+            {
+                path: "/",
+                element: <LandingPage></LandingPage>
+            },
             {
                 path: "jobcard",
                 element: <JobCard></JobCard>
@@ -22,6 +25,14 @@ const router = createBrowserRouter([
             {
                 path: "/details/:id",
                 element: <JobCardDetails></JobCardDetails>
+            },
+            {
+                path: "profile",
+                element: <UserProfile></UserProfile>
+            },
+            {
+                path: "dashboard",
+                element: <AdminDashboard></AdminDashboard>
             },
         ]
     },

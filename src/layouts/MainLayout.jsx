@@ -1,8 +1,6 @@
 import { Outlet } from "react-router-dom";
-// import FilterSidebar from "../components/FilterSidebar";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-import LandingPage from "../pages/LandingPage";
 
 const MainLayout = () => {
     return (
@@ -14,8 +12,7 @@ const MainLayout = () => {
 
             {/* Main Content */}
             <main className="flex-grow w-11/12 mx-auto p-4 md:p-8">
-                <LandingPage />
-                <Outlet />
+                <Outlet /> {/* child routes will render here */}
             </main>
 
             {/* Footer */}
