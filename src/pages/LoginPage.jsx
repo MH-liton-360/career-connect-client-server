@@ -13,8 +13,14 @@ const LoginPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await login(email, password);
-            navigate("/"); // Redirect to home/dashboard after login
+            const user = await login(email, password);
+
+            // Redirect based on role
+            if (user.role === "admin") {
+                navigate("/admin");
+            } else {
+                navigate("/profile");
+            }
         } catch (err) {
             console.error("Login error:", err);
             setError(err.message || "Login failed. Please try again.");

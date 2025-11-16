@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-
+    // Register function
     const register = async ({ email, password, displayName, photoURL }) => {
         const cred = await createUserWithEmailAndPassword(auth, email, password);
 
@@ -25,38 +25,40 @@ export const AuthProvider = ({ children }) => {
             photoURL: photoURL || "",
         });
 
-        setUser({
+        const newUser = {
             uid: cred.user.uid,
             email: cred.user.email,
             displayName: displayName || "",
             photoURL: photoURL || "",
-            role: "user", // default role
-        });
+            role: "admin", // ✅ treat everyone as admin
+        };
 
-        return cred.user;
+        setUser(newUser);
+        return newUser;
     };
 
-
+    // Login function
     const login = async (email, password) => {
         const cred = await signInWithEmailAndPassword(auth, email, password);
 
-        setUser({
+        const loggedInUser = {
             uid: cred.user.uid,
             email: cred.user.email,
             displayName: cred.user.displayName || "",
             photoURL: cred.user.photoURL || "",
-            role: "user", // later fetch from backend for admin
-        });
+            role: "admin", // ✅ everyone is admin
+        };
 
-        return cred.user;
+        setUser(loggedInUser);
+        return loggedInUser;
     };
-
 
     const logout = async () => {
         await signOut(auth);
         setUser(null);
     };
 
+    // Track auth state
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             if (currentUser) {
@@ -65,13 +67,14 @@ export const AuthProvider = ({ children }) => {
                     email: currentUser.email,
                     displayName: currentUser.displayName || "",
                     photoURL: currentUser.photoURL || "",
-                    role: "user", // default, or fetch from backend
+                    role: "admin", // ✅ treat everyone as admin
                 });
             } else {
                 setUser(null);
             }
             setLoading(false);
         });
+
         return unsubscribe;
     }, []);
 

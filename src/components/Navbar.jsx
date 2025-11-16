@@ -16,7 +16,6 @@ const Navbar = () => {
         }
     };
 
-    // Helper: get initial letter
     const getInitial = () => {
         if (user?.displayName) return user.displayName.charAt(0).toUpperCase();
         if (user?.email) return user.email.charAt(0).toUpperCase();
@@ -28,21 +27,13 @@ const Navbar = () => {
             {/* Logo */}
             <div className="flex-1">
                 <Link to="/">
-                    <img
-                        src={logo}
-                        alt="CareerConnect Logo"
-                        className="w-40 h-32 rounded-4xl"
-                    />
+                    <img src={logo} alt="CareerConnect Logo" className="w-40 h-32 rounded-4xl" />
                 </Link>
             </div>
 
-            {/* Search + User/Profile */}
+            {/* Search + Profile */}
             <div className="flex gap-3 items-center">
-                <input
-                    type="text"
-                    placeholder="Search"
-                    className="input input-bordered w-24 md:w-auto"
-                />
+                <input type="text" placeholder="Search" className="input input-bordered w-24 md:w-auto" />
 
                 {user ? (
                     <div className="dropdown dropdown-end">
@@ -62,23 +53,24 @@ const Navbar = () => {
                             tabIndex={0}
                             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow"
                         >
+                            {/* User name/email */}
                             <li className="font-semibold">{user.displayName || user.email}</li>
 
-                            {/* Role-based links */}
-                            {user.role === "admin" && (
-                                <li>
-                                    <Link to="/dashboard">Dashboard</Link>
-                                </li>
-                            )}
+                            {/* Dynamic Dashboard link */}
                             <li>
-                                <Link to="/profile">Profile</Link>
+                                <Link to={user.role === "admin" ? "/admin" : "/profile"}>Dashboard</Link>
                             </li>
 
+                            {/* Profile link */}
+                            {user.role !== "admin" && (
+                                <li>
+                                    <Link to="/profile">Profile</Link>
+                                </li>
+                            )}
+
+                            {/* Logout */}
                             <li>
-                                <button
-                                    className="text-red-500"
-                                    onClick={handleLogout}
-                                >
+                                <button className="text-red-500" onClick={handleLogout}>
                                     Logout
                                 </button>
                             </li>
