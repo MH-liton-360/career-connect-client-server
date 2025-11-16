@@ -10,10 +10,42 @@ export default function Applicants() {
     async function fetchApps() {
         setLoading(true);
         try {
-            const res = await fetch(`${API}/api/applicants`);
-            const data = await res.json();
-            setApps(data);
-        } catch (err) { console.error(err); }
+            // Fetch applied jobs
+            const res = await fetch(`${API}/api/applied-jobs`);
+            const appliedJobs = await res.json();
+
+            // Fetch user info and resumes for each application
+            const appsWithDetails = await Promise.all(
+                appliedJobs.map(async (app) => {
+                    let user = {};
+                    let resume = null;
+
+                    // Fetch user details
+                    try {
+                        const userRes = await fetch(`${API}/api/users`);
+                        const users = await userRes.json();
+                        user = users.find(u => u._id === app.userId) || {};
+                    } catch (err) {
+                        console.error("Failed to fetch user", err);
+                    }
+
+                    // Fetch latest resume
+                    try {
+                        const resumeRes = await fetch(`${API}/api/resumes?userId=${app.userId}`);
+                        const resumes = await resumeRes.json();
+                        if (resumes.length > 0) resume = resumes[resumes.length - 1];
+                    } catch (err) {
+                        console.error("Failed to fetch resume", err);
+                    }
+
+                    return { ...app, name: user.displayName, email: user.email, resume };
+                })
+            );
+
+            setApps(appsWithDetails);
+        } catch (err) {
+            console.error(err);
+        }
         setLoading(false);
     }
 
@@ -27,14 +59,27 @@ export default function Applicants() {
                             <div>
                                 <div className="font-semibold">{a.name || a.userId}</div>
                                 <div className="text-sm text-gray-600">{a.email || ""}</div>
-                                <div className="text-sm text-gray-700 mt-1">Applied for: {a.title || a.jobTitle || a.jobId || "—"}</div>
+                                <div className="text-sm text-gray-700 mt-1">Applied for: {a.jobTitle || a.jobId}</div>
                             </div>
 
                             <div className="flex gap-2">
-                                {a.resume && a.resume.filename ? (
+                                {a.resume ? (
                                     <>
-                                        <a className="px-3 py-1 border rounded" href={`${API.replace(/\/$/, '')}/${a.resume.path}`} target="_blank" rel="noreferrer">View</a>
-                                        <a className="px-3 py-1 border rounded" href={`${API.replace(/\/$/, '')}/${a.resume.path}`} download>Download</a>
+                                        <a
+                                            className="px-3 py-1 border rounded"
+                                            href={`${API.replace(/\/$/, '')}/${a.resume.path}`}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            View
+                                        </a>
+                                        <a
+                                            className="px-3 py-1 border rounded"
+                                            href={`${API.replace(/\/$/, '')}/${a.resume.path}`}
+                                            download
+                                        >
+                                            Download
+                                        </a>
                                     </>
                                 ) : (
                                     <span className="text-sm text-gray-500">No resume</span>

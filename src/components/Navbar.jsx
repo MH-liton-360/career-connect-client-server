@@ -56,17 +56,15 @@ const Navbar = () => {
                             {/* User name/email */}
                             <li className="font-semibold">{user.displayName || user.email}</li>
 
-                            {/* Dynamic Dashboard link */}
+                            {/* Dashboard link */}
                             <li>
-                                <Link to={user.role === "admin" ? "/admin" : "/profile"}>Dashboard</Link>
+                                <Link to={user.role === "admin" ? "/admin" : "/dashboard"}>Dashboard</Link>
                             </li>
 
-                            {/* Profile link */}
-                            {user.role !== "admin" && (
-                                <li>
-                                    <Link to="/profile">Profile</Link>
-                                </li>
-                            )}
+                            {/* Profile link (always accessible) */}
+                            <li>
+                                <Link to="/profile">Profile</Link>
+                            </li>
 
                             {/* Logout */}
                             <li>

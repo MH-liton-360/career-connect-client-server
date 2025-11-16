@@ -21,7 +21,7 @@ const router = createBrowserRouter([
         children: [
             { path: "/", element: <LandingPage /> },
             { path: "jobcard", element: <JobCard /> },
-            { path: "details/:id", element: <JobCardDetails /> },
+            { path: "job/:id", element: <JobCardDetails /> },
             { path: "profile", element: <UserProfile /> },
         ],
     },
@@ -44,7 +44,7 @@ const router = createBrowserRouter([
             { index: true, element: <AdminDashboard /> },
             { path: "jobs", element: <Jobs /> },
             { path: "applicants", element: <Applicants /> },
-            { path: "profile", element: <AdminProfile /> }, // lowercase fixed
+            { path: "profile", element: <AdminProfile /> },
         ],
     },
     { path: "*", element: <h1>Page Not Found</h1> },
