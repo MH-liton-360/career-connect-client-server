@@ -24,14 +24,12 @@ const Navbar = () => {
 
     return (
         <div className="navbar bg-base-100 shadow-sm px-4">
-            {/* Logo */}
             <div className="flex-1">
                 <Link to="/">
                     <img src={logo} alt="CareerConnect Logo" className="w-40 h-32 rounded-4xl" />
                 </Link>
             </div>
 
-            {/* Search + Profile */}
             <div className="flex gap-3 items-center">
                 <input type="text" placeholder="Search" className="input input-bordered w-24 md:w-auto" />
 
@@ -53,20 +51,16 @@ const Navbar = () => {
                             tabIndex={0}
                             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow"
                         >
-                            {/* User name/email */}
                             <li className="font-semibold">{user.displayName || user.email}</li>
 
-                            {/* Dashboard link */}
                             <li>
                                 <Link to={user.role === "admin" ? "/admin" : "/dashboard"}>Dashboard</Link>
                             </li>
 
-                            {/* Profile link (always accessible) */}
                             <li>
                                 <Link to="/profile">Profile</Link>
                             </li>
 
-                            {/* Logout */}
                             <li>
                                 <button className="text-red-500" onClick={handleLogout}>
                                     Logout

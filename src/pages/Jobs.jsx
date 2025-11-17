@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API = import.meta.env.VITE_API_URL;
 
 export default function Jobs() {
     const [jobs, setJobs] = useState([]);
@@ -17,7 +17,7 @@ export default function Jobs() {
     async function fetchJobs() {
         setLoading(true);
         try {
-            const res = await fetch(`${API}/api/jobs`);
+            const res = await fetch(`${API}/api/all-jobs`);
             const data = await res.json();
             setJobs(data);
         } catch (err) {
@@ -66,6 +66,8 @@ export default function Jobs() {
         } catch (err) { console.error(err); }
     }
 
+    console.log(jobs);
+
     return (
         <div>
             <h2 className="text-2xl font-bold mb-4">Jobs</h2>
@@ -93,7 +95,7 @@ export default function Jobs() {
             </div>
 
             <div className="space-y-3">
-                {loading ? <p>Loading...</p> : (jobs.length === 0 ? <p>No jobs yet</p> : jobs.map(job => (
+                {loading ? <p>Loading...</p> : (jobs?.length === 0 ? <p>No jobs yet</p> : jobs?.map(job => (
                     <div key={job._id} className="bg-white p-4 rounded shadow flex justify-between items-start">
                         <div>
                             <h3 className="font-semibold">{job.title}</h3>

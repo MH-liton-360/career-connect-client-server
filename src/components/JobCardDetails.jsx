@@ -1,8 +1,8 @@
 // src/pages/JobCardDetails.jsx
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useAuth } from "../context/AuthContext"; // your Firebase auth context
-const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+import { useAuth } from "../context/AuthContext";
+const API = import.meta.env.VITE_API_URL;
 
 // Example jobs (you can fetch from backend if needed)
 const jobs = [

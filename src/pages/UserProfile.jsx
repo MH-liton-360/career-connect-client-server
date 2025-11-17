@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
-const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API = import.meta.env.VITE_API_URL || "https://your-vercel-app.vercel.app/api";
 
 const UserProfile = () => {
     const { user, loading } = useAuth();

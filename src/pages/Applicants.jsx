@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API = import.meta.env.VITE_API_URL || "https://your-vercel-app.vercel.app/api";
 
 export default function Applicants() {
     const [apps, setApps] = useState([]);
@@ -10,17 +10,14 @@ export default function Applicants() {
     async function fetchApps() {
         setLoading(true);
         try {
-            // Fetch applied jobs
             const res = await fetch(`${API}/api/applied-jobs`);
             const appliedJobs = await res.json();
 
-            // Fetch user info and resumes for each application
             const appsWithDetails = await Promise.all(
                 appliedJobs.map(async (app) => {
                     let user = {};
                     let resume = null;
 
-                    // Fetch user details
                     try {
                         const userRes = await fetch(`${API}/api/users`);
                         const users = await userRes.json();
@@ -29,7 +26,6 @@ export default function Applicants() {
                         console.error("Failed to fetch user", err);
                     }
 
-                    // Fetch latest resume
                     try {
                         const resumeRes = await fetch(`${API}/api/resumes?userId=${app.userId}`);
                         const resumes = await resumeRes.json();
